@@ -12,7 +12,7 @@ namespace GoalSetter.Core.UnitTests.Models
         }
 
         [Fact]
-        public async Task Should()
+        public async Task ShouldAddVehicle()
         {
 
         }
