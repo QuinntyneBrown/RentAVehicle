@@ -7,16 +7,18 @@ namespace GoalSetter.Api
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             Configuration = configuration;
+            Environment = environment;
         }
 
         public IConfiguration Configuration { get; }
+        public IWebHostEnvironment Environment { get; set; }
 
         public void ConfigureServices(IServiceCollection services)
         {
-            Dependencies.Configure(services, Configuration);
+            Dependencies.Configure(services, Configuration, Environment);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -26,10 +28,6 @@ namespace GoalSetter.Api
             app.UseCors("CorsPolicy");
 
             app.UseRouting();
-
-            app.UseAuthentication();
-
-            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

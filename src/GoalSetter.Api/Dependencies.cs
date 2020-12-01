@@ -6,12 +6,13 @@ using Microsoft.OpenApi.Models;
 using System;
 using BuildingBlocks.EventStore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Hosting;
 
 namespace GoalSetter.Api
 {
     public static class Dependencies
     {
-        public static void Configure(IServiceCollection services, IConfiguration configuration)
+        public static void Configure(IServiceCollection services, IConfiguration configuration, IWebHostEnvironment environment)
         {
             services.AddSwaggerGen(options =>
             {
@@ -46,14 +47,26 @@ namespace GoalSetter.Api
 
             services.AddHttpContextAccessor();
 
-            services.AddEventStore(options =>
+            if(environment.EnvironmentName == "Testing")
             {
-                options.UseSqlServer(configuration["Data:DefaultConnection:ConnectionString"],
-                    builder => builder.MigrationsAssembly("GoalSetter.Api")
-                        .EnableRetryOnFailure())
-                .UseLoggerFactory(EventStoreDbContext.ConsoleLoggerFactory)
-                .EnableSensitiveDataLogging();
-            });
+                services.AddEventStore(options =>
+                {
+                    options.UseSqlServer(configuration["Data:DefaultConnection:ConnectionString"],
+                        builder => builder.MigrationsAssembly("GoalSetter.Api")
+                            .EnableRetryOnFailure())
+                    .UseLoggerFactory(EventStoreDbContext.ConsoleLoggerFactory)
+                    .EnableSensitiveDataLogging();
+                });
+            } else
+            {
+                services.AddEventStore(options =>
+                {
+                    options.UseInMemoryDatabase("Testing")
+                    .UseLoggerFactory(EventStoreDbContext.ConsoleLoggerFactory)
+                    .EnableSensitiveDataLogging();
+                });
+            }
+
             services.AddMediatR(typeof(GetRentals));
 
             services.AddControllers();

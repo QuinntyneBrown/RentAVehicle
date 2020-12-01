@@ -18,7 +18,7 @@ namespace GoalSetter.Api.Controllers
             _mediator = mediator;
         }
 
-        [Authorize]
+
         [HttpPost(Name = "CreateVehicleRoute")]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.BadRequest)]
@@ -26,7 +26,6 @@ namespace GoalSetter.Api.Controllers
         public async Task<ActionResult<CreateVehicle.Response>> Upsert([FromBody] CreateVehicle.Request request)
             => await _mediator.Send(request);
 
-        [Authorize]
         [HttpDelete("{vehicleId}", Name = "RemoveVehicleRoute")]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.BadRequest)]
@@ -34,7 +33,6 @@ namespace GoalSetter.Api.Controllers
         public async Task Remove([FromRoute]RemoveVehicle.Request request)
             => await _mediator.Send(request);
 
-        [Authorize]
         [HttpGet("{vehicleId}", Name = "GetVehicleByIdRoute")]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.BadRequest)]
@@ -52,7 +50,6 @@ namespace GoalSetter.Api.Controllers
             return response;
         }
 
-        [Authorize]
         [HttpGet(Name = "GetVehiclesRoute")]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.BadRequest)]

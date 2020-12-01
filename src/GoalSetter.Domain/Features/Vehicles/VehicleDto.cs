@@ -8,7 +8,5 @@ namespace GoalSetter.Domain.Features.Vehicles
         public string Make { get; set; }
         public string Model { get; set; }
         public decimal DailyRate { get; set; }
-        public DateTime Deleted { get; set; }
-
     }
 }

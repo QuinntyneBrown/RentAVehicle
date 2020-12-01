@@ -1,3 +1,4 @@
+using BuildingBlocks.Abstractions;
 using BuildingBlocks.EventStore;
 using GoalSetter.Api;
 using Microsoft.AspNetCore.Hosting;
@@ -9,7 +10,7 @@ namespace GoalSetter.Testing
 {
     public class ApiTestFixture : WebApplicationFactory<Startup>
     {
-        public AppDbContext Context { get; private set; }
+        public IAppDbContext Context { get; private set; }
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
             builder.UseEnvironment("Testing");
@@ -28,7 +29,7 @@ namespace GoalSetter.Testing
                 {
                     var scopedServices = scope.ServiceProvider;
                     
-                    Context = scopedServices.GetRequiredService<AppDbContext>();
+                    Context = scopedServices.GetRequiredService<IAppDbContext>();
 
                 }
             });
