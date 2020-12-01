@@ -1,7 +1,7 @@
+using GoalSetter.Domain.Features.Rentals;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using GoalSetter.Domain.Features.Rentals;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -13,7 +13,10 @@ namespace GoalSetter.Api.Controllers
     {
         private readonly IMediator _mediator;
 
-        public RentalsController(IMediator mediator) => _mediator = mediator;
+        public RentalsController(IMediator mediator)
+        {
+            _mediator = mediator;
+        }
 
         [Authorize]
         [HttpPost(Name = "CreateRentalRoute")]

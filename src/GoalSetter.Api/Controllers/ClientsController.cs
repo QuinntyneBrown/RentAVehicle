@@ -1,7 +1,7 @@
+using GoalSetter.Domain.Features.Clients;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using GoalSetter.Domain.Features.Clients;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -13,7 +13,10 @@ namespace GoalSetter.Api.Controllers
     {
         private readonly IMediator _mediator;
 
-        public ClientsController(IMediator mediator) => _mediator = mediator;
+        public ClientsController(IMediator mediator)
+        {
+            _mediator = mediator;
+        }
 
         [Authorize]
         [HttpGet("{clientId}", Name = "GetClientByIdRoute")]
