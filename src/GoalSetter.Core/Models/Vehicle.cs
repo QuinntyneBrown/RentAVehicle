@@ -6,8 +6,8 @@ namespace GoalSetter.Core.Models
 {
     public class Vehicle: AggregateRoot
     {
-        public Vehicle(string make, string model, decimal dailyRate)
-            => Apply(new VehicleAdded(Guid.NewGuid(), make, model, dailyRate));
+        public Vehicle(string make, string model, Guid dailyRateId)
+            => Apply(new VehicleAdded(Guid.NewGuid(), make, model, dailyRateId));
         protected override void When(dynamic @event) => When(@event);
 
         public void When(VehicleAdded vehicleAdded)
@@ -15,7 +15,7 @@ namespace GoalSetter.Core.Models
             VehicleId = vehicleAdded.VehicleId;
             Make = vehicleAdded.Make;
             Model = vehicleAdded.Model;
-            DailyRate = vehicleAdded.DailyRate;
+            DailyRateId = vehicleAdded.DailyRateId;
         }
 
         public void When(VehicleRemoved vehicleRemoved)
@@ -29,15 +29,15 @@ namespace GoalSetter.Core.Models
                 throw new Exception("Model Invalid Exception");
         }
 
-        public void Remove()
+        public void Remove(DateTime dateTime)
         {
-            Apply(new VehicleRemoved(DateTime.UtcNow));
+            Apply(new VehicleRemoved(dateTime));
         }
 
         public Guid VehicleId { get; private set; }
         public string Make { get; set; }
         public string Model { get; set; }
-        public decimal DailyRate { get; set; }
+        public Guid DailyRateId { get; set; }
         public DateTime Deleted { get; set; }
     }
 }

@@ -38,7 +38,7 @@ namespace GoalSetter.Domain.Features.Vehicles
                 var vehicle = new Vehicle(
                     request.Vehicle.Make,
                     request.Vehicle.Model,
-                    request.Vehicle.DailyRate
+                    request.Vehicle.DailyRateId
                     );
 
                 _context.Store(vehicle);

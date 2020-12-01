@@ -1,5 +1,6 @@
 using BuildingBlocks.Abstractions;
 using GoalSetter.Core.DomainEvents;
+using GoalSetter.Core.ValueObjects;
 using System;
 
 namespace GoalSetter.Core.Models
@@ -34,5 +35,7 @@ namespace GoalSetter.Core.Models
         }
 
         public Guid ClientId { get; private set; }
+        public ClientName Name { get; set; }
+        public Email Email { get; set; }
     }
 }

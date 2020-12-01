@@ -1,6 +1,7 @@
 using BuildingBlocks.Abstractions;
-using GoalSetter.Core.Models;
 using FluentValidation;
+using GoalSetter.Core.Models;
+using GoalSetter.Core.ValueObjects;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
@@ -35,11 +36,13 @@ namespace GoalSetter.Domain.Features.Rentals
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken) {
 
+                var dateRange = DateRange.Create(request.Rental.Start, request.Rental.End);
+
                 var rental = new Rental(
                     request.Rental.VehicleId, 
                     request.Rental.ClientId, 
-                    request.Rental.DateRange, 
-                    request.Rental.Total);
+                    dateRange.Value, 
+                    (Price)request.Rental.Total);
 
                 _context.Store(rental);
 

@@ -4,12 +4,12 @@ namespace GoalSetter.Core.DomainEvents
 {
     public class VehicleAdded
     {
-        public VehicleAdded(Guid vehicleId, string make, string model, decimal dailyRate)
-             => (VehicleId, Make, Model, DailyRate) = (vehicleId, make, model, dailyRate);
+        public VehicleAdded(Guid vehicleId, string make, string model, Guid dailyRateId)
+             => (VehicleId, Make, Model, DailyRateId) = (vehicleId, make, model, dailyRateId);
 
         public Guid VehicleId { get; set; }
         public string Make { get; }
         public string Model { get; set; }
-        public decimal DailyRate { get; set; }
+        public Guid DailyRateId { get; set; }
     }
 }

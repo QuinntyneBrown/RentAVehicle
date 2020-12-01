@@ -1,12 +1,13 @@
 using BuildingBlocks.Abstractions;
 using GoalSetter.Core.DomainEvents;
+using GoalSetter.Core.ValueObjects;
 using System;
 
 namespace GoalSetter.Core.Models
 {
     public class Rental: AggregateRoot
     {
-        public Rental(Guid vehicleId, Guid clientId, DateRange dateRange, decimal total)
+        public Rental(Guid vehicleId, Guid clientId, DateRange dateRange, Price total)
         {
             Apply(new RentalCreated(
                 Guid.NewGuid(),
@@ -44,16 +45,8 @@ namespace GoalSetter.Core.Models
         public Guid RentalId { get; private set; }
         public Guid VehicleId { get; set; }
         public Guid ClientId { get; set; }
-        public decimal Total { get; set; }
+        public Price Total { get; set; }
         public DateRange DateRange { get; set; }
         public DateTime Cancelled { get; set; }
-    }
-
-    public record DateRange
-    {
-        public DateRange(DateTime start, DateTime end) => (Start, End) = (start, end);
-
-        public DateTime Start { get; private set; }
-        public DateTime End { get; private set; }
     }
 }
