@@ -47,25 +47,14 @@ namespace GoalSetter.Api
 
             services.AddHttpContextAccessor();
 
-            if(environment.EnvironmentName == "Testing")
+            services.AddEventStore(options =>
             {
-                services.AddEventStore(options =>
-                {
-                    options.UseSqlServer(configuration["Data:DefaultConnection:ConnectionString"],
-                        builder => builder.MigrationsAssembly("GoalSetter.Api")
-                            .EnableRetryOnFailure())
-                    .UseLoggerFactory(EventStoreDbContext.ConsoleLoggerFactory)
-                    .EnableSensitiveDataLogging();
-                });
-            } else
-            {
-                services.AddEventStore(options =>
-                {
-                    options.UseInMemoryDatabase("Testing")
-                    .UseLoggerFactory(EventStoreDbContext.ConsoleLoggerFactory)
-                    .EnableSensitiveDataLogging();
-                });
-            }
+                options.UseSqlServer(configuration["Data:DefaultConnection:ConnectionString"],
+                    builder => builder.MigrationsAssembly("GoalSetter.Api")
+                        .EnableRetryOnFailure())
+                .UseLoggerFactory(EventStoreDbContext.ConsoleLoggerFactory)
+                .EnableSensitiveDataLogging();
+            });
 
             services.AddMediatR(typeof(GetRentals));
 

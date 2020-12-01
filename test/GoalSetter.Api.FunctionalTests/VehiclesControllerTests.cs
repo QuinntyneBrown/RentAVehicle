@@ -19,7 +19,6 @@ namespace GoalSetter.Api.FunctionalTests
             _fixture = fixture;
         }
 
-
         [Fact]
         public async Task Should_CreateVehicle()
         {
@@ -33,7 +32,9 @@ namespace GoalSetter.Api.FunctionalTests
 
             var response = JsonConvert.DeserializeObject<CreateVehicle.Response>(await httpResponseMessage.Content.ReadAsStringAsync());
 
-            Assert.NotNull(response);
+            var vehicles = _fixture.Context.Set<Vehicle>();
+
+            Assert.Single(vehicles);
         }
     }
 }
