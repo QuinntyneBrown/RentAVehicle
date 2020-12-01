@@ -1,0 +1,1 @@
+{"RootNamespace":"GoalSetter","Namespace":"BuildingBlocks.EventStore","Domain":"GoalSetter.Domain","Api":"GoalSetter.Api","Core":"GoalSetter.Core","EntityIdDataType":"Guid"}

@@ -1,0 +1,1 @@
+{"RootNamespace":"GoalSetter","Namespace":"BuildingBlocks.AspNetCore","Domain":"GoalSetter.Domain","Api":"GoalSetter.Api","Core":"GoalSetter.Core","EntityIdDataType":"Guid"}
