@@ -12,7 +12,7 @@ namespace BuildingBlocks.EventStore
         private readonly List<StoredEvent> _changes = new List<StoredEvent>();
         private readonly IDateTime _dateTime;
         private readonly IEventStoreDbContext _context;
-        public EventStore(IDateTime dateTime, IEventStoreDbContext context)
+        public EventStore(IEventStoreDbContext context, IDateTime dateTime)
         {
             _dateTime = dateTime;
             _context = context;

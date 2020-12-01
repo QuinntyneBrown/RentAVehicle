@@ -1,11 +1,8 @@
 using BuildingBlocks.Abstractions;
 using BuildingBlocks.EventStore;
 using GoalSetter.Api;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Respawn;
 using System;
 
@@ -18,49 +15,23 @@ namespace GoalSetter.Testing
                 var options = new DbContextOptionsBuilder()
                     .UseSqlServer("Data Source=(LocalDb)\\MSSQLLocalDB;Initial Catalog=GoalSetter;Integrated Security=SSPI;")
                     .Options;
-                var context = new EventStoreDbContext(options);
 
-                var eventStore = new EventStore(new MachineDateTime(), context);
-                var aggregateSet = new AggregateSet(context, new MachineDateTime());
+                var context = new EventStoreDbContext(options);
+                var dateTime = new MachineDateTime();
+                var eventStore = new EventStore(context, dateTime);
+                var aggregateSet = new AggregateSet(context, dateTime);
 
                 return new AppDbContext(eventStore, aggregateSet);
             } 
         }
 
-        private static Checkpoint checkpoint = new Checkpoint
+        private static readonly Checkpoint checkpoint = new Checkpoint
         {
             TablesToIgnore = new[]
                 {
                     "__EFMigrationsHistory"
                 }
         };
-        public ApiTestFixture()
-        {
-            checkpoint.Reset("Data Source=(LocalDb)\\MSSQLLocalDB;Initial Catalog=GoalSetter;Integrated Security=SSPI;").GetAwaiter().GetResult();
-        }
-        //protected override void ConfigureWebHost(IWebHostBuilder builder)
-        //{
-        //    builder.UseEnvironment("Development");
-
-        //    builder.ConfigureServices(services =>
-        //    {
-        //        services.AddEntityFrameworkInMemoryDatabase();
-
-        //        var provider = services
-        //            .AddEntityFrameworkInMemoryDatabase()
-        //            .BuildServiceProvider();
-
-        //        var serviceProvider = services.BuildServiceProvider();
-
-        //        using (var scope = serviceProvider.CreateScope())
-        //        {
-        //            var scopedServices = scope.ServiceProvider;
-                    
-        //            Context = scopedServices.GetRequiredService<IAppDbContext>();
-
-        //        }
-        //    });
-        //}
 
         protected override void Dispose(bool disposing)
         {

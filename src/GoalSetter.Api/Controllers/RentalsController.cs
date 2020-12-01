@@ -23,7 +23,7 @@ namespace GoalSetter.Api.Controllers
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(CreateRental.Response), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<CreateRental.Response>> Upsert([FromBody] CreateRental.Request request)
+        public async Task<ActionResult<CreateRental.Response>> Create([FromBody] CreateRental.Request request)
             => await _mediator.Send(request);
 
         [Authorize]
@@ -31,7 +31,7 @@ namespace GoalSetter.Api.Controllers
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task Remove([FromRoute]CancelRental.Request request)
+        public async Task Cancel([FromRoute]CancelRental.Request request)
             => await _mediator.Send(request);
 
         [Authorize]

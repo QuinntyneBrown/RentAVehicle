@@ -23,7 +23,7 @@ namespace GoalSetter.Api.Controllers
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(CreateVehicle.Response), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<CreateVehicle.Response>> Upsert([FromBody] CreateVehicle.Request request)
+        public async Task<ActionResult<CreateVehicle.Response>> Create([FromBody] CreateVehicle.Request request)
             => await _mediator.Send(request);
 
         [HttpDelete("{vehicleId}", Name = "RemoveVehicleRoute")]
