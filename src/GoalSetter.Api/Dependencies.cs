@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using System;
 using BuildingBlocks.EventStore;
+using Microsoft.EntityFrameworkCore;
 
 namespace GoalSetter.Api
 {
@@ -45,12 +46,14 @@ namespace GoalSetter.Api
 
             services.AddHttpContextAccessor();
 
-            services.AddEventStore(new EventStoreBuilderOptions
+            services.AddEventStore(options =>
             {
-                ConnectionString = configuration["Data:DefaultConnection:ConnectionString"],
-                MigrationAssembly = "GoalSetter.Api"
+                options.UseSqlServer(configuration["Data:DefaultConnection:ConnectionString"],
+                    builder => builder.MigrationsAssembly("GoalSetter.Api")
+                        .EnableRetryOnFailure())
+                .UseLoggerFactory(EventStoreDbContext.ConsoleLoggerFactory)
+                .EnableSensitiveDataLogging();
             });
-
             services.AddMediatR(typeof(GetRentals));
 
             services.AddControllers();
