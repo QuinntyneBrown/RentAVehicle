@@ -6,26 +6,26 @@ using System.Threading;
 using System.Threading.Tasks;
 using GoalSetter.Core.ValueObjects;
 
-namespace GoalSetter.Domain.Features.Vehicles
+namespace GoalSetter.Domain.Features.DailyRates
 {
-    public class CreateVehicle
+    public class CreateDailyRate
     {
         public class Validator : AbstractValidator<Request>
         {
             public Validator()
             {
-                RuleFor(request => request.Vehicle).NotNull();
-                RuleFor(request => request.Vehicle).SetValidator(new VehicleValidator());
+                RuleFor(request => request.DailyRate).NotNull();
+                RuleFor(request => request.DailyRate).SetValidator(new DailyRateValidator());
             }
         }
 
         public class Request : IRequest<Response> {  
-            public VehicleDto Vehicle { get; set; }
+            public DailyRateDto DailyRate { get; set; }
         }
 
         public class Response
         {
-            public VehicleDto Vehicle { get; set; }
+            public DailyRateDto DailyRate { get; set; }
         }
 
         public class Handler : IRequestHandler<Request, Response>
@@ -36,22 +36,15 @@ namespace GoalSetter.Domain.Features.Vehicles
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken) {
 
-                var dailyRate = new DailyRate((Price)request.Vehicle.DailyRate);
-
-                var vehicle = new Vehicle(
-                    request.Vehicle.Make,
-                    request.Vehicle.Model,
-                    dailyRate.DailyRateId);
+                var dailyRate = new DailyRate((Price)request.DailyRate.Price);
 
                 _context.Store(dailyRate);
-
-                _context.Store(vehicle);
 
                 await _context.SaveChangesAsync(cancellationToken);
 
                 return new Response()
                 {
-                    Vehicle = vehicle.ToDto(dailyRate)
+                    DailyRate = dailyRate.ToDto()
                 };
             }
         }

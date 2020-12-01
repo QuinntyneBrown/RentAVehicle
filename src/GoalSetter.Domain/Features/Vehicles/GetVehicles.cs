@@ -24,8 +24,19 @@ namespace GoalSetter.Domain.Features.Vehicles
             public Handler(IAppDbContext context) => _context = context;
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken) {
+
+
+                var query = from vehicle in _context.Set<Vehicle>()
+                            join dailyRate in _context.Set<DailyRate>() on vehicle.DailyRateId equals dailyRate.DailyRateId
+                            where dailyRate.Deleted != null && vehicle.Deleted != null
+                            select new
+                            {
+                                Vehicle = vehicle,
+                                DailyRate = dailyRate
+                            };
+
 			    return new Response() { 
-                    Vehicles = _context.Set<Vehicle>().Select(x => x.ToDto()).ToList()
+                    Vehicles = query.Select(x => x.Vehicle.ToDto(x.DailyRate)).ToList()
                 };
             }
         }

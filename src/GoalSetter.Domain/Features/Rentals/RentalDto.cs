@@ -1,4 +1,3 @@
-using GoalSetter.Core.Models;
 using System;
 
 namespace GoalSetter.Domain.Features.Rentals

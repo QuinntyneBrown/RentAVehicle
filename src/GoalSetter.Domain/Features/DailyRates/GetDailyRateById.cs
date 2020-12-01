@@ -6,17 +6,17 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace GoalSetter.Domain.Features.Vehicles
+namespace GoalSetter.Domain.Features.DailyRates
 {
-    public class GetVehicleById
+    public class GetDailyRateById
     {
         public class Request : IRequest<Response> {  
-            public Guid VehicleId { get; set; }        
+            public Guid DailyRateId { get; set; }        
         }
 
         public class Response
         {
-            public VehicleDto Vehicle { get; set; }
+            public DailyRateDto DailyRate { get; set; }
         }
 
         public class Handler : IRequestHandler<Request, Response>
@@ -27,12 +27,10 @@ namespace GoalSetter.Domain.Features.Vehicles
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken) {
 
-                var vehicle = await _context.FindAsync<Vehicle>(request.VehicleId);
-
-                var dailyRate = await _context.FindAsync<DailyRate>(vehicle.DailyRateId);
+                var dailyRate = await _context.FindAsync<DailyRate>(request.DailyRateId);
 
                 return new Response() { 
-                    Vehicle = vehicle.ToDto(dailyRate)
+                    DailyRate = dailyRate.ToDto()
                 };
             }
         }

@@ -27,6 +27,6 @@ namespace GoalSetter.Core.Models
 
         public Guid DailyRateId { get; private set; }
         public Price Price { get; set; }
-        public DateTime Deleted { get; set; }
+        public DateTime? Deleted { get; set; }
     }
 }

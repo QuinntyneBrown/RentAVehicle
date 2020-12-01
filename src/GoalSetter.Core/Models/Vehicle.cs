@@ -38,6 +38,6 @@ namespace GoalSetter.Core.Models
         public string Make { get; set; }
         public string Model { get; set; }
         public Guid DailyRateId { get; set; }
-        public DateTime Deleted { get; set; }
+        public DateTime? Deleted { get; set; }
     }
 }
