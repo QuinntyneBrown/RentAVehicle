@@ -8,9 +8,9 @@ namespace GoalSetter.Core.ValueObjects
     public class DateRange : ValueObject
     {
         [JsonProperty]
-        public DateTime StartDate { get; }
+        public DateTime StartDate { get; private set; }
         [JsonProperty]
-        public DateTime EndDate { get; }
+        public DateTime EndDate { get; private set; }
         public int Days => (EndDate.Date - StartDate.Date).Days;
 
         protected DateRange()
