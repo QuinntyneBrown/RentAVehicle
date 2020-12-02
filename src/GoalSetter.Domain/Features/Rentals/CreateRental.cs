@@ -3,9 +3,9 @@ using FluentValidation;
 using GoalSetter.Core.Models;
 using GoalSetter.Core.ValueObjects;
 using MediatR;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Linq;
 
 namespace GoalSetter.Domain.Features.Rentals
 {
@@ -46,17 +46,14 @@ namespace GoalSetter.Domain.Features.Rentals
 
                 var dailyRate = await _context.FindAsync<DailyRate>(vehicle.DailyRateId);
 
-                var overlapingRentals = _context.Set<Rental>()
-                    .Where(x => x.Cancelled == default && x.DateRange.Overlap(dateRange.Value) && x.VehicleId == request.Rental.VehicleId);
-
-                if (overlapingRentals.Any())
-                    throw new System.Exception();
-
                 var rental = new Rental(
                     request.Rental.VehicleId, 
                     request.Rental.ClientId, 
                     dateRange.Value, 
                     (Price)(dailyRate.Price * dateRange.Value.Days));
+
+                if (_context.Set<Rental>().Any(x => rental.Overlap(x)))
+                    throw new System.Exception("Overlaping Rentals");
 
                 _context.Store(rental);
 

@@ -42,6 +42,17 @@ namespace GoalSetter.Core.Models
             Apply(new RentalCancelled(dateTime));
         }
 
+        public bool Overlap(Rental rental)
+        {
+            if (Cancelled.HasValue || rental.Cancelled.HasValue)
+                return false;
+
+            if (VehicleId != rental.VehicleId)
+                return false;
+
+            return DateRange.Overlap(rental.DateRange);
+        }
+
         public Guid RentalId { get; private set; }
         public Guid VehicleId { get; set; }
         public Guid ClientId { get; set; }
