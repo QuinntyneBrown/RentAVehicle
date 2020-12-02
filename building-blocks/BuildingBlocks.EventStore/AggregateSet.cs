@@ -59,7 +59,7 @@ namespace BuildingBlocks.EventStore
             {
                 var aggregate = (TAggregateRoot)FormatterServices.GetUninitializedObject(typeof(TAggregateRoot));
 
-                foreach (var storedEvent in storedEventGroup.OrderBy(x => x.Sequence))
+                foreach (var storedEvent in storedEventGroup.OrderBy(x => x.CreatedOn))
                 {
                     aggregate.Apply(JsonConvert.DeserializeObject(storedEvent.Data, Type.GetType(storedEvent.DotNetType)));
                 }
