@@ -1,8 +1,10 @@
 using BuildingBlocks.Abstractions;
 using BuildingBlocks.EventStore;
 using GoalSetter.Api;
+using GoalSetter.Testing.Factories;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Respawn;
 using System;
 
@@ -11,12 +13,26 @@ namespace GoalSetter.Testing
     public class ApiTestFixture : WebApplicationFactory<Startup>, IDisposable
     {
         private IAppDbContext _context;
+        private IConfiguration _configuration;
+        public ApiTestFixture()
+        {
+            checkpoint = new Checkpoint()
+            {
+                DbAdapter = DbAdapter.SqlServer,
+                TablesToIgnore = new[]
+                {
+                    "__EFMigrationsHistory"
+                }
+            };
+
+            _configuration = ConfigurationFactory.Create();
+        }
         public IAppDbContext Context { get {
 
                 if (_context == null)
                 {
                     var options = new DbContextOptionsBuilder()
-                        .UseSqlServer("Data Source=(LocalDb)\\MSSQLLocalDB;Initial Catalog=GoalSetter;Integrated Security=SSPI;")
+                        .UseSqlServer(_configuration["Data:DefaultConnection:ConnectionString"])
                         .Options;
 
                     var context = new EventStoreDbContext(options);
@@ -35,17 +51,11 @@ namespace GoalSetter.Testing
             }
         }
 
-        private static readonly Checkpoint checkpoint = new Checkpoint
-        {
-            TablesToIgnore = new[]
-                {
-                    "__EFMigrationsHistory"
-                }
-        };
+        private Checkpoint checkpoint;
 
         protected override void Dispose(bool disposing)
         {
-            checkpoint.Reset("Data Source=(LocalDb)\\MSSQLLocalDB;Initial Catalog=GoalSetter;Integrated Security=SSPI;").GetAwaiter().GetResult();
+            checkpoint.Reset(_configuration["Data:DefaultConnection:ConnectionString"]).GetAwaiter().GetResult();
 
             base.Dispose(disposing);
         }

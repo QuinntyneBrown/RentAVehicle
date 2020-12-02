@@ -25,7 +25,7 @@ namespace GoalSetter.Api.Controllers
         public async Task<ActionResult<CreateRental.Response>> Create([FromBody] CreateRental.Request request)
             => await _mediator.Send(request);
 
-        [HttpDelete("{rentalId}", Name = "CancelRentalRoute")]
+        [HttpPut("{rentalId}/cancel", Name = "CancelRentalRoute")]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.OK)]

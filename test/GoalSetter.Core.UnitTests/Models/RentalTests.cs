@@ -17,7 +17,7 @@ namespace GoalSetter.Core.UnitTests.Models
         }
 
         [Fact]
-        public async Task Should_DeserializeCorrectly()
+        public async Task Should_StoreAndReHydrateCorrectly()
         {
             var fakeId = Guid.NewGuid();
 
@@ -30,16 +30,16 @@ namespace GoalSetter.Core.UnitTests.Models
             var eventStoreDbContext = new EventStoreDbContext(options);
             var eventStore = new EventStore(eventStoreDbContext, dateTime);
             var aggregateSet = new AggregateSet(eventStoreDbContext, dateTime);
-            var appDbContext = new AppDbContext(eventStore, aggregateSet);
 
-            appDbContext.Store(rental);
+            eventStore.Store(rental);
 
-            await appDbContext.SaveChangesAsync(default);
+            await eventStore.SaveChangesAsync(default);
 
-            var sut = await appDbContext.FindAsync<Rental>(rental.RentalId);
-
+            var sut = await aggregateSet.FindAsync<Rental>(rental.RentalId);
 
             Assert.NotEqual(default, sut.DateRange.StartDate);
+
+            Assert.NotEqual(default, sut.DateRange.EndDate);
 
         }
     }
