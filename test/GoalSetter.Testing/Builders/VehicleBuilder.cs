@@ -6,9 +6,9 @@ namespace GoalSetter.Testing.Builders
     {
         private Vehicle _vehicle;
 
-        public VehicleBuilder(string make, string model, DailyRate dailyRate)
+        public VehicleBuilder(int year, string make, string model, DailyRate dailyRate)
         {
-            _vehicle = new Vehicle(make,model,dailyRate.DailyRateId);
+            _vehicle = new Vehicle(year, make,model,dailyRate.DailyRateId);
         }
 
         public Vehicle Build()

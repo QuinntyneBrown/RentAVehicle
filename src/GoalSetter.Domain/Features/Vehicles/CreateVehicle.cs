@@ -39,6 +39,7 @@ namespace GoalSetter.Domain.Features.Vehicles
                 var dailyRate = new DailyRate((Price)request.Vehicle.DailyRate);
 
                 var vehicle = new Vehicle(
+                    request.Vehicle.Year,
                     request.Vehicle.Make,
                     request.Vehicle.Model,
                     dailyRate.DailyRateId);

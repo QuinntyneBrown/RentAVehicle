@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using CSharpFunctionalExtensions;
+using Newtonsoft.Json;
 
 namespace GoalSetter.Core.ValueObjects
 { 
@@ -7,9 +8,16 @@ namespace GoalSetter.Core.ValueObjects
     {
         public const decimal MinPriceValue = 0;
         public static Price Undefined => new Price(0);
-        public decimal Value { get; }
+
+        [JsonProperty]
+        public decimal Value { get; private set; }
         
-        private Price(decimal value)
+        protected Price()
+        {
+
+        }
+
+        protected Price(decimal value)
         {
             Value = value;
         }

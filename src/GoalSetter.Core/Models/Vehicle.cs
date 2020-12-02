@@ -6,8 +6,8 @@ namespace GoalSetter.Core.Models
 {
     public class Vehicle: AggregateRoot
     {
-        public Vehicle(string make, string model, Guid dailyRateId)
-            => Apply(new VehicleAdded(Guid.NewGuid(), make, model, dailyRateId));
+        public Vehicle(int year, string make, string model, Guid dailyRateId)
+            => Apply(new VehicleAdded(Guid.NewGuid(), year, make, model, dailyRateId));
         protected override void When(dynamic @event) => When(@event);
 
         public void When(VehicleAdded vehicleAdded)
@@ -15,6 +15,7 @@ namespace GoalSetter.Core.Models
             VehicleId = vehicleAdded.VehicleId;
             Make = vehicleAdded.Make;
             Model = vehicleAdded.Model;
+            Year = vehicleAdded.Year;
             DailyRateId = vehicleAdded.DailyRateId;
         }
 
@@ -25,7 +26,7 @@ namespace GoalSetter.Core.Models
 
         protected override void EnsureValidState()
         {
-            if (string.IsNullOrEmpty(Make) || string.IsNullOrEmpty(Model))
+            if (string.IsNullOrEmpty(Make) || string.IsNullOrEmpty(Model) || Year == default)
                 throw new Exception("Model Invalid Exception");
         }
 
@@ -35,6 +36,7 @@ namespace GoalSetter.Core.Models
         }
 
         public Guid VehicleId { get; private set; }
+        public int Year { get; set; }
         public string Make { get; set; }
         public string Model { get; set; }
         public Guid DailyRateId { get; set; }

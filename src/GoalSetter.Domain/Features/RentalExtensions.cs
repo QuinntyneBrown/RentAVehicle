@@ -9,7 +9,12 @@ namespace GoalSetter.Domain.Features
         {
             return new RentalDto
             {
-
+                RentalId = rental.RentalId,
+                VehicleId = rental.VehicleId,
+                ClientId = rental.ClientId,
+                Total = rental.Total,
+                Start = rental.DateRange.StartDate,
+                End = rental.DateRange.EndDate
             };
         }
     }

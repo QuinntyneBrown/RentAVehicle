@@ -47,6 +47,6 @@ namespace GoalSetter.Core.Models
         public Guid ClientId { get; set; }
         public Price Total { get; set; }
         public DateRange DateRange { get; set; }
-        public DateTime Cancelled { get; set; }
+        public DateTime? Cancelled { get; set; }
     }
 }

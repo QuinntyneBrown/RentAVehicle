@@ -1,4 +1,7 @@
+using BuildingBlocks.Abstractions;
+using BuildingBlocks.Core;
 using BuildingBlocks.EventStore;
+using GoalSetter.Core.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -28,6 +31,7 @@ namespace GoalSetter.Api
             {
                 var context = scope.ServiceProvider.GetRequiredService<EventStoreDbContext>();
                 var configuration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
+                var appDbContext = scope.ServiceProvider.GetRequiredService<IAppDbContext>();
 
                 if (args.Contains("ci"))
                     args = new string[4] { "dropdb", "migratedb", "seeddb", "stop" };
@@ -45,12 +49,12 @@ namespace GoalSetter.Api
                 if (args.Contains("seeddb"))
                 {
                     context.Database.EnsureCreated();
-
+                    DbInitializer.Initialize(appDbContext);
                 }
 
                 if (args.Contains("secret"))
                 {
-
+                    Console.WriteLine(SecretGenerator.Generate());
                     Environment.Exit(0);
                 }
 

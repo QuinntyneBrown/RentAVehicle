@@ -60,6 +60,5 @@ namespace GoalSetter.Api
 
             services.AddControllers();
         }
-
     }
 }

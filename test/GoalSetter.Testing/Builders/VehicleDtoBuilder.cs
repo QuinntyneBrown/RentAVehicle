@@ -11,6 +11,7 @@ namespace GoalSetter.Testing.Builders
             _vehicleDto = new VehicleDto()
             {
                 DailyRate = 1m,
+                Year = 2004,
                 Make = "Test",
                 Model = "Test"
             };

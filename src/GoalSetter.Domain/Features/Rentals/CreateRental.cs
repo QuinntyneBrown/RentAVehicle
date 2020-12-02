@@ -5,6 +5,7 @@ using GoalSetter.Core.ValueObjects;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace GoalSetter.Domain.Features.Rentals
 {
@@ -38,11 +39,24 @@ namespace GoalSetter.Domain.Features.Rentals
 
                 var dateRange = DateRange.Create(request.Rental.Start, request.Rental.End);
 
+                var vehicle = await _context.FindAsync<Vehicle>(request.Rental.VehicleId);
+
+                if (vehicle.Deleted.HasValue)
+                    throw new System.Exception("");
+
+                var dailyRate = await _context.FindAsync<DailyRate>(vehicle.DailyRateId);
+
+                var overlapingRentals = _context.Set<Rental>()
+                    .Where(x => x.Cancelled == default && x.DateRange.Overlap(dateRange.Value) && x.VehicleId == request.Rental.VehicleId);
+
+                if (overlapingRentals.Any())
+                    throw new System.Exception();
+
                 var rental = new Rental(
                     request.Rental.VehicleId, 
                     request.Rental.ClientId, 
                     dateRange.Value, 
-                    (Price)request.Rental.Total);
+                    (Price)(dailyRate.Price * dateRange.Value.Days));
 
                 _context.Store(rental);
 

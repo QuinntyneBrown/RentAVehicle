@@ -18,7 +18,6 @@ namespace GoalSetter.Api.Controllers
             _mediator = mediator;
         }
 
-        [Authorize]
         [HttpPost(Name = "CreateRentalRoute")]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.BadRequest)]
@@ -26,7 +25,6 @@ namespace GoalSetter.Api.Controllers
         public async Task<ActionResult<CreateRental.Response>> Create([FromBody] CreateRental.Request request)
             => await _mediator.Send(request);
 
-        [Authorize]
         [HttpDelete("{rentalId}", Name = "CancelRentalRoute")]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.BadRequest)]
@@ -34,7 +32,6 @@ namespace GoalSetter.Api.Controllers
         public async Task Cancel([FromRoute]CancelRental.Request request)
             => await _mediator.Send(request);
 
-        [Authorize]
         [HttpGet("{rentalId}", Name = "GetRentalByIdRoute")]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.BadRequest)]
@@ -52,7 +49,6 @@ namespace GoalSetter.Api.Controllers
             return response;
         }
 
-        [Authorize]
         [HttpGet(Name = "GetRentalsRoute")]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.BadRequest)]

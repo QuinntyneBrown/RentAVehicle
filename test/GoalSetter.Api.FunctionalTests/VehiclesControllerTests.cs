@@ -30,10 +30,6 @@ namespace GoalSetter.Api.FunctionalTests
 
             var httpResponseMessage = await _fixture.CreateClient().PostAsync("api/vehicles", stringContent);
 
-            httpResponseMessage.EnsureSuccessStatusCode();
-
-            var response = JsonConvert.DeserializeObject<CreateVehicle.Response>(await httpResponseMessage.Content.ReadAsStringAsync());
-
             Assert.NotNull(await _fixture.Context.FindAsync<Vehicle>(vehicle.VehicleId));
         }
 
@@ -42,7 +38,7 @@ namespace GoalSetter.Api.FunctionalTests
         {
             var dailyRate = new DailyRate((Price)1m);
 
-            var vehicle = new Vehicle("Honda", "Accord", dailyRate.DailyRateId);
+            var vehicle = new Vehicle(2004, "Honda", "Accord", dailyRate.DailyRateId);
 
             _fixture.Context.Store(dailyRate);
 

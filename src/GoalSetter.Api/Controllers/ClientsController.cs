@@ -1,6 +1,5 @@
 using GoalSetter.Domain.Features.Clients;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Threading.Tasks;
@@ -18,7 +17,6 @@ namespace GoalSetter.Api.Controllers
             _mediator = mediator;
         }
 
-        [Authorize]
         [HttpGet("{clientId}", Name = "GetClientByIdRoute")]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.BadRequest)]
@@ -36,7 +34,6 @@ namespace GoalSetter.Api.Controllers
             return response;
         }
 
-        [Authorize]
         [HttpGet(Name = "GetClientsRoute")]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.BadRequest)]

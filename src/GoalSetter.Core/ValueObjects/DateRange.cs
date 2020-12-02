@@ -1,4 +1,5 @@
 using CSharpFunctionalExtensions;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
@@ -6,7 +7,9 @@ namespace GoalSetter.Core.ValueObjects
 {
     public class DateRange : ValueObject
     {
+        [JsonProperty]
         public DateTime StartDate { get; }
+        [JsonProperty]
         public DateTime EndDate { get; }
         public int Days => (EndDate.Date - StartDate.Date).Days;
 

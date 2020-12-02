@@ -4,7 +4,7 @@ namespace GoalSetter.Domain.Features.Rentals
 {
     public class RentalDto
     {
-        public Guid RentalId { get; private set; }
+        public Guid RentalId { get; set; }
         public Guid VehicleId { get; set; }
         public Guid ClientId { get; set; }
         public DateTime Start { get; set; }
