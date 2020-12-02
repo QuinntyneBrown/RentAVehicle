@@ -7,11 +7,17 @@ namespace GoalSetter.Core.Models
 {
     public class Client: AggregateRoot
     {
+        public Client(string name, string email)
+        {
+            Apply(new ClientAdded(Guid.NewGuid(), name, email));
+        }
         protected override void When(dynamic @event) => When(@event);
 
         public void When(ClientAdded clientAdded)
         {
-
+            ClientId = clientAdded.ClientId;
+            Name = (ClientName)clientAdded.Name;
+            Email = (Email)clientAdded.Email;
         }
 
         public void When(ClientRemoved clientRemoved)
@@ -22,11 +28,6 @@ namespace GoalSetter.Core.Models
         protected override void EnsureValidState()
         {
 
-        }
-
-        public void Add(string value)
-        {
-            Apply(new ClientAdded(value));
         }
 
         public void Remove(string value)

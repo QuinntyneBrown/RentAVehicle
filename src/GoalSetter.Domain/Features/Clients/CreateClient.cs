@@ -35,7 +35,7 @@ namespace GoalSetter.Domain.Features.Clients
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken) {
 
-                var client = new Client();
+                var client = new Client(request.Client.Name, request.Client.Email);
 
                 _context.Store(client);
 

@@ -1,12 +1,17 @@
+using System;
+
 namespace GoalSetter.Core.DomainEvents
 {
     public class ClientAdded
     {
-        public ClientAdded(string value)
+        public ClientAdded(Guid clientId, string name, string email)
         {
-            Value = value;
+            ClientId = clientId;
+            Name = name;
+            Email = email;
         }
-
-        public string Value { get; }
+        public Guid ClientId { get; set; }
+        public string Name { get; }
+        public string Email { get; set; }
     }
 }

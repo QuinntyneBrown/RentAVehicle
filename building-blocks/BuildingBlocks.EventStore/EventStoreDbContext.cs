@@ -23,9 +23,6 @@ namespace BuildingBlocks.EventStore
                     data => JsonConvert.SerializeObject(data),
                     data => JsonConvert.DeserializeObject<Dictionary<string, HashSet<AggregateRoot>>>(data));
             });
-
-            // add seed data here
-            // check configuraion?
         }
     }
 }
