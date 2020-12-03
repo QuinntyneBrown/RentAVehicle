@@ -21,6 +21,24 @@ namespace GoalSetter.Api.FunctionalTests
         }
 
         [Fact]
+        public async Task Should_GetVehicles()
+        {
+            var dailyRate = _fixture.Context.Store(new DailyRate((Price)1));
+
+            _fixture.Context.Store(new VehicleBuilder(dailyRate: dailyRate).Build());
+            _fixture.Context.Store(new VehicleBuilder(dailyRate: dailyRate).Build());
+            _fixture.Context.Store(new VehicleBuilder(dailyRate: dailyRate).Build());
+            
+            await _fixture.Context.SaveChangesAsync(default);
+
+            var httpResponseMessage = await _fixture.CreateClient().GetAsync("api/vehicles");
+
+            var response = JsonConvert.DeserializeObject<GetVehicles.Response>(await httpResponseMessage.Content.ReadAsStringAsync());
+
+            Assert.NotEmpty(response.Vehicles);
+        }
+
+        [Fact]
         public async Task Should_CreateVehicle()
         {
             var vehicle = new VehicleDtoBuilder().Build();
