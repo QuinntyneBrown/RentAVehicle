@@ -7,13 +7,15 @@ using System;
 using BuildingBlocks.EventStore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Hosting;
-
+using Hellang.Middleware.ProblemDetails;
 namespace GoalSetter.Api
 {
     public static class Dependencies
     {
         public static void Configure(IServiceCollection services, IConfiguration configuration, IWebHostEnvironment environment)
         {
+            services.AddProblemDetails();
+
             services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("v1", new OpenApiInfo

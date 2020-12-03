@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-
+using Hellang.Middleware.ProblemDetails;
 namespace GoalSetter.Api
 {
     public class Startup
@@ -23,7 +23,8 @@ namespace GoalSetter.Api
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseExceptionHandler("/error");
+
+            app.UseProblemDetails();
 
             app.UseSwagger();
 

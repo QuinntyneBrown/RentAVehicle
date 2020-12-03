@@ -28,7 +28,7 @@ namespace GoalSetter.Domain.Features.Vehicles
                 var vehiclesQuery = from vehicle in _context.Set<Vehicle>()
                                     join dailyRate in _context.Set<DailyRate>() 
                                     on vehicle.DailyRateId equals dailyRate.DailyRateId
-                                    where dailyRate.Deleted != null && vehicle.Deleted != null
+                                    where !dailyRate.Deleted.HasValue && !vehicle.Deleted.HasValue
                                     select new
                                     {
                                         Vehicle = vehicle,

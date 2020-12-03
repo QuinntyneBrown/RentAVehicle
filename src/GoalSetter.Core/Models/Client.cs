@@ -27,7 +27,8 @@ namespace GoalSetter.Core.Models
 
         protected override void EnsureValidState()
         {
-
+            if (string.IsNullOrEmpty(Name) || string.IsNullOrEmpty(Email))
+                throw new Exception("Model invalid");
         }
 
         public void Remove(DateTime dateTime)
