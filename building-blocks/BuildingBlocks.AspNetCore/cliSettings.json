@@ -1,1 +1,1 @@
-{"RootNamespace":"GoalSetter","Namespace":"BuildingBlocks.AspNetCore","Domain":"GoalSetter.Domain","Api":"GoalSetter.Api","Core":"GoalSetter.Core","EntityIdDataType":"Guid"}
+{"RootNamespace":"RentAVehicle","Namespace":"BuildingBlocks.AspNetCore","Domain":"RentAVehicle.Domain","Api":"RentAVehicle.Api","Core":"RentAVehicle.Core","EntityIdDataType":"Guid"}

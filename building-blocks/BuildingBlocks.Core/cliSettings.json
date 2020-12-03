@@ -1,1 +1,1 @@
-{"RootNamespace":"GoalSetter","Namespace":"BuildingBlocks.Core","Domain":"GoalSetter.Domain","Api":"GoalSetter.Api","Core":"GoalSetter.Core","EntityIdDataType":"Guid"}
+{"RootNamespace":"RentAVehicle","Namespace":"BuildingBlocks.Core","Domain":"RentAVehicle.Domain","Api":"RentAVehicle.Api","Core":"RentAVehicle.Core","EntityIdDataType":"Guid"}

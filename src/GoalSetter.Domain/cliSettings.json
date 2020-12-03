@@ -1,8 +1,0 @@
-{  
-  "RootNamespace": "GoalSetter",
-  "Namespace": "GoalSetter.Domain",
-  "Domain": "GoalSetter.Domain",
-  "Api": "GoalSetter.Api",
-  "Core": "GoalSetter.Core",
-  "EntityIdDataType": "Guid"
-}
