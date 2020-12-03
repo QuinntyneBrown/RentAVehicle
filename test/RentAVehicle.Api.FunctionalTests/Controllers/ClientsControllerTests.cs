@@ -3,6 +3,7 @@ using RentAVehicle.Core.Models;
 using RentAVehicle.Domain.Features.Clients;
 using RentAVehicle.Testing;
 using RentAVehicle.Testing.Builders;
+using System;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -46,6 +47,22 @@ namespace RentAVehicle.Api.FunctionalTests.Controllers
             var sut = await _fixture.Context.FindAsync<Client>(client.ClientId);
 
             Assert.True(sut.Deleted.HasValue);
+        }
+
+        internal static class Endpoints
+        {
+            public static class Post
+            {
+                public static string AddClient = "api/clients";
+            }
+
+            public static class Delete
+            {
+                public static string ClientBy(Guid clientId)
+                {
+                    return $"api/clients/{clientId}";
+                }
+            }
         }
     }
 }
