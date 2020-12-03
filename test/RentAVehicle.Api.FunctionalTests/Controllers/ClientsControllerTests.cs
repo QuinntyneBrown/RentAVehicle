@@ -6,6 +6,7 @@ using RentAVehicle.Testing.Builders;
 using System;
 using System.Threading.Tasks;
 using Xunit;
+using BuildingBlocks.Core;
 
 namespace RentAVehicle.Api.FunctionalTests.Controllers
 {
@@ -22,11 +23,7 @@ namespace RentAVehicle.Api.FunctionalTests.Controllers
         {
             var client = new ClientDtoBuilder().Build();
 
-            var stringContent = new StringContentBuilder(new { client }).Build();
-
-            var httpResponseMessage = await _fixture.CreateClient().PostAsync("api/clients", stringContent);
-
-            var response = JsonConvert.DeserializeObject<CreateClient.Response>(await httpResponseMessage.Content.ReadAsStringAsync());
+            var response = await _fixture.CreateClient().PostAsAsync<dynamic, CreateClient.Response>(Endpoints.Post.AddClient, new { client });
 
             var sut = await _fixture.Context.FindAsync<Client>(response.Client.ClientId);
 
@@ -40,7 +37,7 @@ namespace RentAVehicle.Api.FunctionalTests.Controllers
 
             await _fixture.Context.SaveChangesAsync(default);
 
-            var httpResponseMessage = await _fixture.CreateClient().DeleteAsync($"api/clients/{client.ClientId}");
+            var httpResponseMessage = await _fixture.CreateClient().DeleteAsync(Endpoints.Delete.ClientBy(client.ClientId));
 
             httpResponseMessage.EnsureSuccessStatusCode();
 
