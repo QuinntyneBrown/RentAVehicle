@@ -1,13 +1,19 @@
 using System.Collections.Generic;
 using CSharpFunctionalExtensions;
+using Newtonsoft.Json;
 
 namespace GoalSetter.Core.ValueObjects
 {
     public class Make : ValueObject
     {
         public const int MaxLength = 250;
-        public string Value { get; }
+        [JsonProperty]
+        public string Value { get; private set; }
 
+        protected Make()
+        {
+
+        }
         private Make(string value)
         {
             Value = value;

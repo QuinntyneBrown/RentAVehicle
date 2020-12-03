@@ -55,21 +55,13 @@ namespace GoalSetter.Api.FunctionalTests.Controllers
         [Fact]
         public async Task ShouldCancelRental()
         {
-            var dailyRate = new DailyRate((Price)1m);
+            var dailyRate = _fixture.Context.Store(new DailyRate((Price)1m));
 
-            var vehicle = new VehicleBuilder(2004, "Honda", "Pilot", dailyRate).Build();
+            var vehicle = _fixture.Context.Store(new VehicleBuilder(2004, "Honda", "Pilot", dailyRate).Build());
 
-            var client = new ClientBuilder().Build();
+            var client = _fixture.Context.Store(new ClientBuilder().Build());
 
-            var rental = new Rental(vehicle.VehicleId,client.ClientId,DateRange.Create(DateTime.UtcNow, DateTime.UtcNow.AddDays(1)).Value,(Price)100m);
-
-            _fixture.Context.Store(vehicle);
-
-            _fixture.Context.Store(client);
-
-            _fixture.Context.Store(dailyRate);
-
-            _fixture.Context.Store(rental);
+            var rental = _fixture.Context.Store(new Rental(vehicle.VehicleId,client.ClientId,DateRange.Create(DateTime.UtcNow, DateTime.UtcNow.AddDays(1)).Value,(Price)100m));
 
             await _fixture.Context.SaveChangesAsync(default);
 
@@ -77,7 +69,7 @@ namespace GoalSetter.Api.FunctionalTests.Controllers
 
             var sut = await _fixture.Context.FindAsync<Rental>(rental.RentalId);
 
-            Assert.NotEqual(default, sut.Cancelled);
+            Assert.True(sut.Cancelled.HasValue);
 
         }
 
@@ -87,12 +79,8 @@ namespace GoalSetter.Api.FunctionalTests.Controllers
             var dailyRate = _fixture.Context.Store(new DailyRate((Price)1m));
 
             var client = _fixture.Context.Store(new ClientBuilder().Build());
-
-            var vehicle = new VehicleBuilder(2004, "Honda", "Pilot", dailyRate).Build();
             
-            vehicle.Remove(DateTime.UtcNow);
-            
-            _fixture.Context.Store(vehicle);
+            var vehicle = _fixture.Context.Store(new VehicleBuilder(dailyRate: dailyRate).Remove().Build());
 
             await _fixture.Context.SaveChangesAsync(default);
 

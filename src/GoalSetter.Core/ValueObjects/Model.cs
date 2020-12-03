@@ -1,12 +1,19 @@
 using System.Collections.Generic;
 using CSharpFunctionalExtensions;
+using Newtonsoft.Json;
 
 namespace GoalSetter.Core.ValueObjects
 {
     public class Model : ValueObject
     {
         public const int MaxLength = 250;
-        public string Value { get; }
+        [JsonProperty]
+        public string Value { get; private set; }
+
+        protected Model()
+        {
+
+        }
 
         private Model(string value)
         {

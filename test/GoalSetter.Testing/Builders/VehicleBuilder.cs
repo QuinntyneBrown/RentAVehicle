@@ -1,4 +1,6 @@
 using GoalSetter.Core.Models;
+using GoalSetter.Core.ValueObjects;
+using System;
 
 namespace GoalSetter.Testing.Builders
 {
@@ -6,11 +8,19 @@ namespace GoalSetter.Testing.Builders
     {
         private Vehicle _vehicle;
 
-        public VehicleBuilder(int year, string make, string model, DailyRate dailyRate)
+        public VehicleBuilder(int year = 2004, string make = "Honda", string model = "Pilot", DailyRate dailyRate = null)
         {
+            dailyRate ??= new DailyRate((Price)1m);
+
             _vehicle = new Vehicle(year, make,model,dailyRate.DailyRateId);
         }
 
+        public VehicleBuilder Remove()
+        {
+            _vehicle.Remove(DateTime.UtcNow);
+
+            return this;
+        }
         public Vehicle Build()
         {
             return _vehicle;

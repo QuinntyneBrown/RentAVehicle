@@ -1,14 +1,20 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using CSharpFunctionalExtensions;
+using Newtonsoft.Json;
 
 namespace GoalSetter.Core.ValueObjects
 {
     public class Email : ValueObject
     {
         public const int MaxLength = 150;
-        public string Value { get; }
+        [JsonProperty]
+        public string Value { get; private set; }
 
+        protected Email()
+        {
+
+        }
         private Email(string value)
         {
             Value = value;
