@@ -1,7 +1,8 @@
 using BuildingBlocks.Abstractions;
-using RentAVehicle.Core.Models;
 using FluentValidation;
 using MediatR;
+using RentAVehicle.Core.Models;
+using RentAVehicle.Core.ValueObjects;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -34,10 +35,8 @@ namespace RentAVehicle.Domain.Features.Clients
             public Handler(IAppDbContext context) => _context = context;
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken) {
-
-                var client = new Client(request.Client.Name, request.Client.Email);
-
-                _context.Store(client);
+                
+                var client = _context.Store(new Client((ClientName)request.Client.Name, (Email)request.Client.Email));
 
                 await _context.SaveChangesAsync(cancellationToken);
 

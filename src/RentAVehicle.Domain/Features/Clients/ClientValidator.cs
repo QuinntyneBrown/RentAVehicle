@@ -6,7 +6,8 @@ namespace RentAVehicle.Domain.Features.Clients
     {
         public ClientValidator()
         {
-            
+            RuleFor(x => x.Email).EmailAddress();
+            RuleFor(x => x.Name).NotNull().NotEmpty();
         }
     }
 }

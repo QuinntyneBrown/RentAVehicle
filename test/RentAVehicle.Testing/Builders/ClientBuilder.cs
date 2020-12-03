@@ -1,4 +1,5 @@
 using RentAVehicle.Core.Models;
+using RentAVehicle.Core.ValueObjects;
 
 namespace RentAVehicle.Testing.Builders
 {
@@ -8,7 +9,7 @@ namespace RentAVehicle.Testing.Builders
 
         public ClientBuilder()
         {
-            _client = new Client("Test","test@test.com");
+            _client = new Client((ClientName)"Test",(Email)"test@email.com");
         }
 
         public Client Build()

@@ -7,7 +7,7 @@ namespace RentAVehicle.Core.Models
 {
     public class Client: AggregateRoot
     {
-        public Client(string name, string email)
+        public Client(ClientName name, Email email)
         {
             Apply(new ClientAdded(Guid.NewGuid(), name, email));
         }
