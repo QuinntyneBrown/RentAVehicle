@@ -1,10 +1,8 @@
+using Newtonsoft.Json;
 using RentAVehicle.Core.Models;
 using RentAVehicle.Domain.Features.Clients;
 using RentAVehicle.Testing;
 using RentAVehicle.Testing.Builders;
-using Newtonsoft.Json;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -23,7 +21,7 @@ namespace RentAVehicle.Api.FunctionalTests.Controllers
         {
             var client = new ClientDtoBuilder().Build();
 
-            var stringContent = new StringContent(JsonConvert.SerializeObject(new { client }), Encoding.UTF8, "application/json");
+            var stringContent = new StringContentBuilder(new { client }).Build();
 
             var httpResponseMessage = await _fixture.CreateClient().PostAsync("api/clients", stringContent);
 
@@ -31,7 +29,7 @@ namespace RentAVehicle.Api.FunctionalTests.Controllers
 
             var sut = await _fixture.Context.FindAsync<Client>(response.Client.ClientId);
 
-            Assert.NotNull(sut);
+            Assert.NotEqual(default, sut.ClientId);
         }
 
         [Fact]
