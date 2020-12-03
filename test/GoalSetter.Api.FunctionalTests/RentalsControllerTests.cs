@@ -1,14 +1,17 @@
+using GoalSetter.Core.Data;
 using GoalSetter.Core.Models;
 using GoalSetter.Core.ValueObjects;
 using GoalSetter.Domain.Features.Rentals;
 using GoalSetter.Testing;
 using GoalSetter.Testing.Builders;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
+using static GoalSetter.Core.Data.DbInitializer;
 
 namespace GoalSetter.Api.FunctionalTests
 {
@@ -22,7 +25,7 @@ namespace GoalSetter.Api.FunctionalTests
         }
 
         [Fact]
-        public async Task Should_CreateRentalWithAvailablVehiclesForDateRange()
+        public async Task Should_CreateRentalWithAvailableVehiclesForDateRangeAndCalculatePrice()
         {
             var dailyRate = new DailyRate((Price)1m);
 
@@ -43,7 +46,7 @@ namespace GoalSetter.Api.FunctionalTests
                 ClientId = client.ClientId,
                 VehicleId = vehicle.VehicleId,
                 Start = DateTime.UtcNow.AddDays(1),
-                End = DateTime.UtcNow.AddDays(2)
+                End = DateTime.UtcNow.AddDays(3)
             };
 
             var stringContent = new StringContent(JsonConvert.SerializeObject(new { rental }), Encoding.UTF8, "application/json");
@@ -54,7 +57,7 @@ namespace GoalSetter.Api.FunctionalTests
 
             var sut = await _fixture.Context.FindAsync<Rental>(response.Rental.RentalId);
 
-            Assert.Equal((Price)1m, sut.Total);
+            Assert.Equal((Price)2m, sut.Total);
         }
 
         [Fact]
@@ -89,12 +92,66 @@ namespace GoalSetter.Api.FunctionalTests
         [Fact]
         public async Task RemovedVehicleShouldNotBeAbleForNewRentals()
         {
+            var dailyRate = _fixture.Context.Store(new DailyRate((Price)1m));
+
+            var client = _fixture.Context.Store(new ClientBuilder().Build());
+
+            var vehicle = new VehicleBuilder(2004, "Honda", "Pilot", dailyRate).Build();
+            
+            vehicle.Remove(DateTime.UtcNow);
+            
+            _fixture.Context.Store(vehicle);
+
+            await _fixture.Context.SaveChangesAsync(default);
+
+            var rental = new RentalDto
+            {
+                ClientId = client.ClientId,
+                VehicleId = vehicle.VehicleId,
+                Start = DateTime.UtcNow.AddDays(1),
+                End = DateTime.UtcNow.AddDays(2)
+            };
+
+            var stringContent = new StringContent(JsonConvert.SerializeObject(new { rental }), Encoding.UTF8, "application/json");
+
+            var httpResponseMessage = await _fixture.CreateClient().PostAsync("api/rentals", stringContent);
+
+            var response = JsonConvert.DeserializeObject<ProblemDetails>(await httpResponseMessage.Content.ReadAsStringAsync());
+
+            Assert.NotNull(response);
 
         }
 
         [Fact]
-        public async Task ShouldCalculateRentalPrice()
+        public async Task RentedVehiclesShouldNotBeAvailableForRent()
         {
+            var dailyRate = _fixture.Context.Store(new DailyRate((Price)1m));
+
+            var client = _fixture.Context.Store(new ClientBuilder().Build());
+
+            var vehicle = _fixture.Context.Store(new VehicleBuilder(2004, "Honda", "Pilot", dailyRate).Build());
+
+            var dateRange = DateRange.Create(DateTime.UtcNow.AddDays(-1), DateTime.UtcNow.AddDays(30));
+
+            _ = _fixture.Context.Store(new Rental(vehicle.VehicleId, client.ClientId, dateRange.Value, (Price)100m));
+
+            await _fixture.Context.SaveChangesAsync(default);
+
+            var rental = new RentalDto
+            {
+                ClientId = client.ClientId,
+                VehicleId = vehicle.VehicleId,
+                Start = DateTime.UtcNow.AddDays(1),
+                End = DateTime.UtcNow.AddDays(2)
+            };
+
+            var stringContent = new StringContent(JsonConvert.SerializeObject(new { rental }), Encoding.UTF8, "application/json");
+
+            var httpResponseMessage = await _fixture.CreateClient().PostAsync("api/rentals", stringContent);
+
+            var response = JsonConvert.DeserializeObject<ProblemDetails>(await httpResponseMessage.Content.ReadAsStringAsync());
+
+            Assert.NotNull(response);
 
         }
     }

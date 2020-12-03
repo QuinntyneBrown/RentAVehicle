@@ -30,9 +30,11 @@ namespace BuildingBlocks.EventStore
             return _aggregateSet.Set<T>();
         }
 
-        public void Store(AggregateRoot aggregateRoot)
+        public TAggregateRoot Store<TAggregateRoot>(TAggregateRoot aggregateRoot)
+            where TAggregateRoot : AggregateRoot
         {
             _eventStore.Store(aggregateRoot);
+            return aggregateRoot;
         }
     }
 }

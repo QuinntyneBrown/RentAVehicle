@@ -44,9 +44,6 @@ namespace GoalSetter.Api.Migrations
                 name: "IX_StoredEvents_StreamId_Aggregate",
                 table: "StoredEvents",
                 columns: new[] { "StreamId", "Aggregate" });
-
-            // add default data here
-            migrationBuilder.Sql("");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

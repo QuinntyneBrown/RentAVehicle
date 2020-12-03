@@ -30,35 +30,29 @@ namespace GoalSetter.Api.FunctionalTests
 
             var httpResponseMessage = await _fixture.CreateClient().PostAsync("api/vehicles", stringContent);
 
-            Assert.NotNull(await _fixture.Context.FindAsync<Vehicle>(vehicle.VehicleId));
+            var response = JsonConvert.DeserializeObject<CreateVehicle.Response>(await httpResponseMessage.Content.ReadAsStringAsync());
+
+            var sut = await _fixture.Context.FindAsync<Vehicle>(response.Vehicle.VehicleId);
+
+            Assert.NotNull(sut);
         }
 
         [Fact]
         public async Task Should_RemoveVehicle()
         {
-            var dailyRate = new DailyRate((Price)1m);
+            var dailyRate = _fixture.Context.Store(new DailyRate((Price)1m));
 
-            var vehicle = new Vehicle(2004, "Honda", "Accord", dailyRate.DailyRateId);
-
-            _fixture.Context.Store(dailyRate);
-
-            _fixture.Context.Store(vehicle);
+            var vehicle = _fixture.Context.Store(new Vehicle(2004, "Honda", "Accord", dailyRate.DailyRateId));
 
             await _fixture.Context.SaveChangesAsync(default);
-
-            Assert.Single(_fixture.Context.Set<Vehicle>().Where(x => x.Deleted == null));
 
             var httpResponseMessage = await _fixture.CreateClient().DeleteAsync($"api/vehicles/{vehicle.VehicleId}");
 
             httpResponseMessage.EnsureSuccessStatusCode();
 
-            var response = JsonConvert.DeserializeObject<RemoveVehicle.Response>(await httpResponseMessage.Content.ReadAsStringAsync());
+            var sut = await _fixture.Context.FindAsync<Vehicle>(vehicle.VehicleId);
 
-            _fixture.Context = null;
-
-            var vehicles = _fixture.Context.Set<Vehicle>();
-
-            Assert.Empty(_fixture.Context.Set<Vehicle>().Where(x => x.Deleted == default));
+            Assert.True(sut.Deleted.HasValue);
         }
     }
 }

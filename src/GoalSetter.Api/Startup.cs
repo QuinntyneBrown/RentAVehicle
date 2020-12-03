@@ -23,6 +23,8 @@ namespace GoalSetter.Api
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseExceptionHandler("/error");
+
             app.UseSwagger();
 
             app.UseCors("CorsPolicy");

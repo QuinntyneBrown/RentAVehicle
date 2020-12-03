@@ -9,7 +9,8 @@ namespace BuildingBlocks.Abstractions
     {
         IQueryable<T> Set<T>()
             where T : AggregateRoot;
-        void Store(AggregateRoot aggregateRoot);
+        TAggregateRoot Store<TAggregateRoot>(TAggregateRoot aggregateRoot)
+            where TAggregateRoot : AggregateRoot;
         Task<TAggregateRoot> FindAsync<TAggregateRoot>(Guid id)
             where TAggregateRoot : AggregateRoot;
 

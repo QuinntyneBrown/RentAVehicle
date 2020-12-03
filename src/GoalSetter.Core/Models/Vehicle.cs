@@ -27,7 +27,9 @@ namespace GoalSetter.Core.Models
         protected override void EnsureValidState()
         {
             if (string.IsNullOrEmpty(Make) || string.IsNullOrEmpty(Model) || Year == default)
-                throw new Exception("Model Invalid Exception");
+            {
+                throw new Exception("Model Invalid");         
+            }
         }
 
         public void Remove(DateTime dateTime)
