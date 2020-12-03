@@ -8,13 +8,18 @@ using BuildingBlocks.EventStore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Hosting;
 using Hellang.Middleware.ProblemDetails;
+using BuildingBlocks.Core;
+
 namespace GoalSetter.Api
+    
 {
     public static class Dependencies
     {
         public static void Configure(IServiceCollection services, IConfiguration configuration, IWebHostEnvironment environment)
         {
             services.AddProblemDetails();
+
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
             services.AddSwaggerGen(options =>
             {
