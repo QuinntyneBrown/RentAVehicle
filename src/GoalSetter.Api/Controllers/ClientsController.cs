@@ -17,6 +17,13 @@ namespace GoalSetter.Api.Controllers
             _mediator = mediator;
         }
 
+        [HttpPost(Name = "CreateClientRoute")]
+        [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(CreateClient.Response), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<CreateClient.Response>> Create([FromBody] CreateClient.Request request)
+            => await _mediator.Send(request);
+
         [HttpGet("{clientId}", Name = "GetClientByIdRoute")]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.BadRequest)]
@@ -39,6 +46,13 @@ namespace GoalSetter.Api.Controllers
         [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(GetClients.Response), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<GetClients.Response>> Get()
-            => await _mediator.Send(new GetClients.Request());           
+            => await _mediator.Send(new GetClients.Request());
+
+        [HttpDelete("{clientId}", Name = "RemoveClientRoute")]
+        [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+        [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        public async Task Remove([FromRoute] RemoveClient.Request request)
+            => await _mediator.Send(request);
     }
 }

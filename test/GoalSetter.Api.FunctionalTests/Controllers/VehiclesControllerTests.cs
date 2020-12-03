@@ -4,7 +4,6 @@ using GoalSetter.Domain.Features.Vehicles;
 using GoalSetter.Testing;
 using GoalSetter.Testing.Builders;
 using Newtonsoft.Json;
-using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;

@@ -1,12 +1,14 @@
+using System;
+
 namespace GoalSetter.Core.DomainEvents
 {
     public class ClientRemoved
     {
-        public ClientRemoved(string value)
+        public ClientRemoved(DateTime deleted)
         {
-            Value = value;
+            Deleted = deleted;
         }
 
-        public string Value { get; }
+        public DateTime Deleted { get; }
     }
 }

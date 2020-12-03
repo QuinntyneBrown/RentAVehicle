@@ -22,7 +22,7 @@ namespace GoalSetter.Core.Models
 
         public void When(ClientRemoved clientRemoved)
         {
-
+            Deleted = clientRemoved.Deleted;
         }
 
         protected override void EnsureValidState()
@@ -30,13 +30,14 @@ namespace GoalSetter.Core.Models
 
         }
 
-        public void Remove(string value)
+        public void Remove(DateTime dateTime)
         {
-            Apply(new ClientRemoved(value));
+            Apply(new ClientRemoved(dateTime));
         }
 
         public Guid ClientId { get; private set; }
         public ClientName Name { get; set; }
         public Email Email { get; set; }
+        public DateTime? Deleted { get; set; }
     }
 }

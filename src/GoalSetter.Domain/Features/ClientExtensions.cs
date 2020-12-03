@@ -9,7 +9,9 @@ namespace GoalSetter.Domain.Features
         {
             return new ClientDto
             {
-
+                ClientId = client.ClientId,
+                Name = client.Name,
+                Email = client.Email
             };
         }
     }

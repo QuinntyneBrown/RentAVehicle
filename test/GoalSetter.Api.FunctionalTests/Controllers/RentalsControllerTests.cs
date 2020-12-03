@@ -1,4 +1,3 @@
-using GoalSetter.Core.Data;
 using GoalSetter.Core.Models;
 using GoalSetter.Core.ValueObjects;
 using GoalSetter.Domain.Features.Rentals;
@@ -11,9 +10,8 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
-using static GoalSetter.Core.Data.DbInitializer;
 
-namespace GoalSetter.Api.FunctionalTests
+namespace GoalSetter.Api.FunctionalTests.Controllers
 {
     public class RentalsControllerTests: IClassFixture<ApiTestFixture>
     {
@@ -27,17 +25,11 @@ namespace GoalSetter.Api.FunctionalTests
         [Fact]
         public async Task Should_CreateRentalWithAvailableVehiclesForDateRangeAndCalculatePrice()
         {
-            var dailyRate = new DailyRate((Price)1m);
+            var dailyRate = _fixture.Context.Store(new DailyRate((Price)1m));
 
-            var vehicle = new VehicleBuilder(2004, "Honda", "Pilot", dailyRate).Build();
+            var vehicle = _fixture.Context.Store(new VehicleBuilder(2004, "Honda", "Pilot", dailyRate).Build());
 
-            var client = new ClientBuilder().Build();
-
-            _fixture.Context.Store(vehicle);
-
-            _fixture.Context.Store(client);
-
-            _fixture.Context.Store(dailyRate);
+            var client = _fixture.Context.Store(new ClientBuilder().Build());
 
             await _fixture.Context.SaveChangesAsync(default);
 
