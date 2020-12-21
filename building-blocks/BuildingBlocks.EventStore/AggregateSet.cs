@@ -34,7 +34,7 @@ namespace BuildingBlocks.EventStore
 
             return from storedEvent in _context.StoredEvents
 
-                   let ids = streamIds ?? _context.StoredEvents.Where(x => x.Aggregate == aggregateName).Select(x => x.StreamId).AsEnumerable()
+                   let ids = streamIds != null ? streamIds : _context.StoredEvents.Where(x => x.Aggregate == aggregateName).Select(x => x.StreamId).AsEnumerable()
 
                    where ids.Contains(storedEvent.StreamId) && storedEvent.CreatedOn <= createdSince
                    
@@ -44,14 +44,15 @@ namespace BuildingBlocks.EventStore
         public IQueryable<TAggregateRoot> Set<TAggregateRoot>()
             where TAggregateRoot : AggregateRoot
         {
+
             var aggregateName = typeof(TAggregateRoot).Name;
 
-            return (from storedEvent in StoredEvents(aggregateName).ToList()
-                                      group storedEvent by storedEvent.StreamId into storedEventsGroup
-                                      orderby storedEventsGroup.Key
-                                      select storedEventsGroup).Aggregate(new List<TAggregateRoot>(), Reduce).AsQueryable();
+            return (from storedEvent in StoredEvents(aggregateName).AsEnumerable()
+                    group storedEvent by storedEvent.StreamId into storedEventsGroup
+                    orderby storedEventsGroup.Key
+                    select storedEventsGroup).Aggregate(new List<TAggregateRoot>(), Reduce).AsQueryable();
 
-            static List<TAggregateRoot> Reduce(List<TAggregateRoot> aggregates, IGrouping<Guid,StoredEvent> group)
+            static List<TAggregateRoot> Reduce(List<TAggregateRoot> aggregates, IGrouping<Guid, StoredEvent> group)
             {
                 var aggregate = (TAggregateRoot)FormatterServices.GetUninitializedObject(typeof(TAggregateRoot));
 
