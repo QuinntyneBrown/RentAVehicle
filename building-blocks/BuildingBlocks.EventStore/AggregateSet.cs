@@ -32,59 +32,55 @@ namespace BuildingBlocks.EventStore
         {
             createdSince ??= _dateTime.UtcNow;
 
-            IEnumerable<Guid> ids = streamIds != null
-                ? streamIds
-                : (from storedEvent in _context.StoredEvents
-                    where storedEvent.Aggregate == aggregateName
-                    select storedEvent.StreamId).Distinct();
-
             return from storedEvent in _context.StoredEvents
-                    where ids.Contains(storedEvent.StreamId) && storedEvent.CreatedOn <= createdSince
-                    select storedEvent;
+
+                   let ids = streamIds ?? _context.StoredEvents.Where(x => x.Aggregate == aggregateName).Select(x => x.StreamId).AsEnumerable()
+
+                   where ids.Contains(storedEvent.StreamId) && storedEvent.CreatedOn <= createdSince
+                   
+                   select storedEvent;
         }
 
         public IQueryable<TAggregateRoot> Set<TAggregateRoot>()
             where TAggregateRoot : AggregateRoot
         {
-            var aggregates = new List<TAggregateRoot>();
-
             var aggregateName = typeof(TAggregateRoot).Name;
 
-            var storedEventsGroups = from storedEvent in StoredEvents(aggregateName).ToList()
-                                    group storedEvent by storedEvent.StreamId into storedEventsGroup
-                                    orderby storedEventsGroup.Key
-                                    select storedEventsGroup;
+            return (from storedEvent in StoredEvents(aggregateName).ToList()
+                                      group storedEvent by storedEvent.StreamId into storedEventsGroup
+                                      orderby storedEventsGroup.Key
+                                      select storedEventsGroup).Aggregate(new List<TAggregateRoot>(), Reduce).AsQueryable();
 
-            foreach (var storedEventGroup in storedEventsGroups)
+            static List<TAggregateRoot> Reduce(List<TAggregateRoot> aggregates, IGrouping<Guid,StoredEvent> group)
             {
                 var aggregate = (TAggregateRoot)FormatterServices.GetUninitializedObject(typeof(TAggregateRoot));
 
-                foreach (var storedEvent in storedEventGroup.OrderBy(x => x.CreatedOn))
+                foreach (var storedEvent in group.OrderBy(x => x.CreatedOn))
                 {
                     aggregate.Apply(JsonConvert.DeserializeObject(storedEvent.Data, Type.GetType(storedEvent.DotNetType)));
                 }
 
-                aggregates.Add(aggregate);
-            }
+                aggregate.ClearChanges();
 
-            return aggregates.AsQueryable();
+                aggregates.Add(aggregate);
+
+                return aggregates;
+            }
         }
 
         public async Task<TAggregateRoot> FindAsync<TAggregateRoot>(Guid streamId)
             where TAggregateRoot : AggregateRoot
         {
-            var aggregate = (TAggregateRoot)FormatterServices.GetUninitializedObject(typeof(TAggregateRoot));
+            return StoredEvents(typeof(TAggregateRoot).Name, new Guid[1] { streamId }).OrderBy(x => x.CreatedOn).Aggregate((TAggregateRoot)FormatterServices.GetUninitializedObject(typeof(TAggregateRoot)), Reduce);
 
-            var storedEvents = StoredEvents(typeof(TAggregateRoot).Name, new Guid[1] { streamId }).ToList();
-
-            foreach (var storedEvent in storedEvents.OrderBy(x => x.CreatedOn))
+            static TAggregateRoot Reduce(TAggregateRoot aggregateRoot, StoredEvent storedEvent)
             {
-                aggregate.Apply(JsonConvert.DeserializeObject(storedEvent.Data, Type.GetType(storedEvent.DotNetType)));
+                aggregateRoot.Apply(JsonConvert.DeserializeObject(storedEvent.Data, Type.GetType(storedEvent.DotNetType)));
+
+                aggregateRoot.ClearChanges();
+
+                return aggregateRoot;
             }
-
-            aggregate.ClearChanges();
-
-            return aggregate;
         }
     }
 }

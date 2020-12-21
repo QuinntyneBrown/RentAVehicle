@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <Folder Include="Builders\" />
+    <Folder Include="AuthenticationHandlers\" />
   </ItemGroup>
 
 </Project>

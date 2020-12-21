@@ -9,7 +9,9 @@ namespace BuildingBlocks.EventStore
     public class EventStoreDbContext: DbContext, IEventStoreDbContext
     {
         public EventStoreDbContext(DbContextOptions options)
-            : base(options) { }
+            : base(options) {
+            ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+        }
 
         public static readonly ILoggerFactory ConsoleLoggerFactory
             = LoggerFactory.Create(builder => { builder.AddConsole(); });
